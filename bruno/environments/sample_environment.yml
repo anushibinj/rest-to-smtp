@@ -10,3 +10,5 @@ variables:
     value: from@test.com
   - name: SMTP_TO
     value: to@test.com
+  - name: SMTP_PORT
+    value: "25"

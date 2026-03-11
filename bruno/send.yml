@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "smtpHost": "{{SMTP_HOST}}",
-        "smtpPort": 25,
+        "smtpPort": {{SMTP_PORT}},
         "smtpUsername": "{{SMTP_USERNAME}}",
         "smtpPassword": "{{SMTP_PASSWORD}}",
         "to": "{{SMTP_TO}}",

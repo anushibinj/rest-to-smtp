@@ -30,6 +30,14 @@ spring:
 server:
     port: 8080
 
+    # ── Reverse-Proxy Header Forwarding ──────────────────────────────────────────
+    # When running behind nginx (or any reverse proxy) with a sub-path prefix
+    # (e.g. /rest-to-smtp/), Spring must rewrite its own generated URLs using the
+    # forwarded headers the proxy injects (X-Forwarded-Prefix, X-Forwarded-Proto,
+    # etc.).  Without this, Swagger UI fetches /api-docs/swagger-config instead of
+    # /rest-to-smtp/api-docs/swagger-config and fails to load.
+    forward-headers-strategy: FRAMEWORK
+
     # ── Tomcat High-Scale Tuning ─────────────────────────────────────────────────
     tomcat:
         # Maximum number of simultaneous connections the server will accept.

@@ -22,11 +22,6 @@ http:
       }
   auth: inherit
 
-runtime:
-  variables:
-    - name: SMTP_HOST
-      value: ""
-
 settings:
   encodeUrl: true
   timeout: 0

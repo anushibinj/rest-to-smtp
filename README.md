@@ -1,6 +1,6 @@
 # REST-to-SMTP Proxy
 
-[![CI — Test, Build & Push Docker Image](https://github.com/anushibin007/rest-to-smtp/actions/workflows/ci.yml/badge.svg)](https://github.com/anushibin007/rest-to-smtp/actions/workflows/ci.yml)
+[![CI — Test, Build & Push Docker Image](https://github.com/anushibinj/rest-to-smtp/actions/workflows/ci.yml/badge.svg)](https://github.com/anushibinj/rest-to-smtp/actions/workflows/ci.yml)
 [![Docker Hub](https://img.shields.io/docker/pulls/anushibin007/rest-to-smtp)](https://hub.docker.com/r/anushibin007/rest-to-smtp)
 
 A high-scale, stateless REST-to-SMTP proxy microservice built with Spring Boot 3.4 and Java 21 Virtual Threads.

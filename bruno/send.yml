@@ -1,0 +1,34 @@
+info:
+  name: send
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{BACKEND_ROOT_URL}}/api/v1/send"
+  body:
+    type: json
+    data: |-
+      {
+        "smtpHost": "{{SMTP_HOST}}",
+        "smtpPort": 25,
+        "smtpUsername": "{{SMTP_USERNAME}}",
+        "smtpPassword": "{{SMTP_PASSWORD}}",
+        "to": "{{SMTP_TO}}",
+        "from": "{{SMTP_FROM}}",
+        "subject": "Testing rest-to-smtp",
+        "html": "<h1>Hi</h1><p>It works!</p>",
+        "text": "This is plaintext"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: SMTP_HOST
+      value: ""
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

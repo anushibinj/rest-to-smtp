@@ -1,0 +1,53 @@
+services:
+  rest-to-smtp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rest-to-smtp-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Xmx256m -Xms128m
+      - SERVER_PORT=8080
+      - SERVER_COMPRESSION_ENABLED=true
+    restart: unless-stopped
+    networks:
+      - rest-to-smtp-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/swagger-ui/index.html"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  rest-to-smtp-network:
+    driver: bridge
+
+# Usage:
+#   docker-compose up                    # Start in foreground
+#   docker-compose up -d                 # Start in background
+#   docker-compose logs -f               # View logs
+#   docker-compose stop                  # Stop the service
+#   docker-compose down                  # Stop and remove containers
+#   docker-compose down -v               # Stop and remove containers + volumes
+#
+# Test the service:
+#   curl -X POST http://localhost:8080/api/v1/send \
+#     -H "Content-Type: application/json" \
+#     -d '{
+#       "smtpHost": "smtp.example.com",
+#       "smtpPort": 587,
+#       "smtpUsername": "user@example.com",
+#       "smtpPassword": "password",
+#       "to": "recipient@example.com",
+#       "from": "sender@example.com",
+#       "subject": "Test Email",
+#       "text": "This is a test email"
+#     }'

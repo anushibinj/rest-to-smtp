@@ -1,0 +1,100 @@
+spring:
+    application:
+        name: rest-to-smtp
+
+    # ── Virtual Threads ──────────────────────────────────────────────────────────
+    # Routes all Tomcat request-handling threads through Java 21 virtual threads.
+    # Each incoming HTTP request gets its own lightweight virtual thread, enabling
+    # millions of concurrent connections without exhausting OS thread resources.
+    threads:
+        virtual:
+            enabled: true
+
+    # ── Mail Auto-Configuration ──────────────────────────────────────────────────
+    # Exclude Spring Boot's static mail auto-configuration. We build JavaMailSender
+    # instances dynamically per-request in MailSenderFactory, so no global SMTP
+    # credentials are needed here.
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+
+    # ── MVC / Jackson ────────────────────────────────────────────────────────────
+    mvc:
+        throw-exception-if-no-handler-found: true
+
+    jackson:
+        default-property-inclusion: non_null
+        serialization:
+            write-dates-as-timestamps: false
+
+server:
+    port: 8080
+
+    # ── Tomcat High-Scale Tuning ─────────────────────────────────────────────────
+    tomcat:
+        # Maximum number of simultaneous connections the server will accept.
+        # With virtual threads the platform can handle far more than a traditional
+        # thread-pool model; 20 000 is a conservative starting point.
+        max-connections: 20000
+
+        # Queue depth for incoming TCP connections when all worker threads are busy.
+        # The OS TCP stack uses this as its SYN backlog.
+        accept-count: 500
+
+        # Maximum number of worker threads (each backed by a virtual thread at runtime).
+        max-threads: 1000
+
+        # Prevent slow clients from holding connections indefinitely.
+        connection-timeout: 20000
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+logging:
+    level:
+        root: INFO
+        com.anushibinj.resttosmtp: DEBUG
+    pattern:
+        console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# ── OpenAPI / Swagger UI ──────────────────────────────────────────────────────
+springdoc:
+    api-docs:
+        path: /api-docs
+    swagger-ui:
+        path: /swagger-ui
+        operations-sorter: alpha
+        tags-sorter: alpha
+        display-request-duration: true
+    info:
+        title: REST-to-SMTP Proxy
+        description: >
+            High-scale stateless proxy that accepts email payloads with embedded SMTP
+            credentials and dispatches them asynchronously via Java 21 Virtual Threads.
+        version: "1.0.0"
+        contact:
+            name: Platform Engineering
+
+# ── Actuator / Health & Metrics ───────────────────────────────────────────────
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health,info,metrics,prometheus
+            base-path: /actuator
+    endpoint:
+        health:
+            show-details: always
+            show-components: always
+            probes:
+                enabled: true
+    health:
+        livenessState:
+            enabled: true
+        readinessState:
+            enabled: true
+    metrics:
+        export:
+            simple:
+                enabled: true
+        tags:
+            application: rest-to-smtp
+            version: "1.0.0"

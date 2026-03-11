@@ -1,0 +1,13 @@
+# Secrets
+.env*
+
+# Dependencies
+node_modules
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# keep only sample environment file
+environments/*
+!environments/sample_environment.yml

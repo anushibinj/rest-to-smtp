@@ -1,0 +1,12 @@
+name: sample_environment
+variables:
+  - name: BACKEND_ROOT_URL
+    value: http://localhost:8080
+  - secret: true
+    name: SMTP_PASSWORD
+  - name: SMTP_USERNAME
+    value: authenticated_user@test.com
+  - name: SMTP_FROM
+    value: from@test.com
+  - name: SMTP_TO
+    value: to@test.com
